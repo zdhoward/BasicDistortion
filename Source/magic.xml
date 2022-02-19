@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<magic>
+  <Style name="default">
+    <Nodes/>
+    <Classes>
+      <plot-view border="2" background-color="black" border-color="silver" display="contents"/>
+      <nomargin margin="0" padding="0" border="0"/>
+      <group margin="5" padding="5" border="2" flex-direction="column"/>
+      <transparent background-color="transparentblack"/>
+    </Classes>
+    <Types>
+      <Slider border="0" slider-textbox="textbox-below"/>
+      <ToggleButton border="0" max-height="50" caption-size="0" text="Active"/>
+      <TextButton border="0" max-height="50" caption-size="0"/>
+      <ComboBox border="0" max-height="50" caption-size="0"/>
+      <Plot border="0" margin="0" padding="0" background-color="00000000"
+            radius="0"/>
+      <XYDragComponent border="0" margin="0" padding="0" background-color="00000000"
+                       radius="0"/>
+    </Types>
+  </Style>
+  <View id="root" resizable="1" resize-corner="1" lookAndFeel="" flex-direction="column"
+        background-color="FFDF904F" tab-color="" border-color="FFDF904F"
+        width="700" height="350" min-width="700" max-width="700" min-height="350"
+        max-height="350">
+    <View flex-direction="column" background-color="FFAF2850" border-color="FFDF904F"
+          id="Everything">
+      <View flex-grow=".75" background-color="FFAF2850" border-color="FFAF2850"
+            id="Title" margin="0" padding="0" border="0">
+        <Label text="Basic Distortion" justification="centred" font-size="32"
+               lookAndFeel="Skeuomorphic" background-color="FFAF2850" border-color="FFAF2850"
+               caption-color="" label-text="FFFFE8CF"/>
+      </View>
+      <View class="parameters nomargin" lookAndFeel="Skeuomorphic" border="5"
+            margin="5" padding="" flex-grow="3" background-color="FFAF2850"
+            id="Parameters" border-color="FF301850">
+        <Slider caption="Drive" parameter="Drive" lookAndFeel="Skeuomorphic"
+                slider-type="rotary" slider-textbox="textbox-below" background-color="FFAF2850"
+                class="slider" slider-text="FF301850" caption-color="FF301850"
+                caption-size="30"/>
+        <Slider caption="Range" parameter="Range" pos-x="24.9057%" pos-y="0%"
+                pos-width="25.0314%" pos-height="100%" lookAndFeel="Skeuomorphic"
+                slider-type="rotary" slider-textbox="textbox-below" background-color="FFAF2850"
+                caption-color="FF301850" slider-text="FF301850" caption-size="30"
+                class="slider"/>
+        <Slider caption="Blend" parameter="Blend" lookAndFeel="Skeuomorphic"
+                slider-type="rotary" slider-textbox="textbox-below" background-color="FFAF2850"
+                slider-text="FF301850" caption-color="FF301850" caption-size="30"
+                class="slider"/>
+        <Slider caption="Gain" parameter="Gain" pos-x="74.9686%" pos-y="0%" pos-width="25.0314%"
+                pos-height="100%" slider-type="rotary" slider-textbox="textbox-below"
+                background-color="FFAF2850" lookAndFeel="Skeuomorphic" caption-color="FF301850"
+                slider-text="FF301850" caption-size="30" class="slider"/>
+      </View>
+    </View>
+    <View id="Info" flex-grow=".05" margin="0" padding="0" border="0" pos-x="-1.02669%"
+          pos-y="92.6366%" pos-width="100%" pos-height="4.98812%" background-color="00000000">
+      <View id="InfoLeft" margin="0" padding="0" border="0" background-color="00000000">
+        <Label text="v0.1" margin="0" padding="0" border="0" justification="centred-left"
+               label-text="FFFFE8CF" caption-placement="centred-top" background-color="00000000"/>
+      </View>
+      <View id="InfoRight" margin="0" padding="0" border="0" caption="" background-color="00000000">
+        <Label text="Made By ZxTools" justification="centred-right" label-text="FFFFE8CF"
+               margin="0" padding="0" border="0" background-color="00000000"/>
+      </View>
+    </View>
+  </View>
+  <Styles>
+    <Style name="default">
+      <Nodes/>
+      <Classes>
+        <plot-view border="2" background-color="black" border-color="silver" display="contents"/>
+        <nomargin margin="0" padding="0" border="0"/>
+        <group margin="5" padding="5" border="2" flex-direction="column" background-color="FFDF904F"
+               border-color="FFDF904F" tab-color="FFDF904F" lookAndFeel="Skeuomorphic">
+          <media/>
+        </group>
+        <transparent background-color="transparentblack"/>
+        <slider background-color="FFAF2850">
+          <media/>
+        </slider>
+      </Classes>
+      <Types>
+        <Slider border="0" slider-textbox="textbox-below" lookAndFeel="Skeuomorphic"
+                caption-size=""/>
+        <ToggleButton border="0" max-height="50" caption-size="0" text="Active"/>
+        <TextButton border="0" max-height="50" caption-size="0"/>
+        <ComboBox border="0" max-height="50" caption-size="0"/>
+        <Plot border="0" margin="0" padding="0" background-color="00000000"
+              radius="0"/>
+        <XYDragComponent border="0" margin="0" padding="0" background-color="00000000"
+                         radius="0"/>
+      </Types>
+      <Palettes>
+        <default/>
+      </Palettes>
+    </Style>
+  </Styles>
+</magic>
