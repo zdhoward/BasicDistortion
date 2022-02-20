@@ -256,8 +256,6 @@ BasicDistortionAudioProcessor::createParameterLayout()
                                                             text.getFloatValue() * 1000.0f :
                                                             text.getFloatValue(); }));
 
-    //layout.add(std::make_unique<juce::AudioParameterFloat>("Blend", "Blend", juce::NormalisableRange<float>(0.f, 1.f, 0.001f, 1.f), 1.f));
-
     layout.add(std::make_unique<juce::AudioParameterFloat>( "Blend", 
                                                             "Blend", 
                                                             juce::NormalisableRange<float>(0.f, 1.f, 0.001f, 1.f), 
