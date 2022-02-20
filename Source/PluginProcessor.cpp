@@ -17,6 +17,9 @@ BasicDistortionAudioProcessor::BasicDistortionAudioProcessor()
          apvts( *this, nullptr, "Parameters", createParameterLayout())
 {
     FOLEYS_SET_SOURCE_PATH(__FILE__);
+
+
+
     magicState.setGuiValueTree(BinaryData::magic_xml, BinaryData::magic_xmlSize);
 }
 
@@ -159,6 +162,7 @@ void BasicDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
         auto* channelData = buffer.getWritePointer (channel);
+        auto gain = Decibels::decibelsToGain(chainSettings.gain);
 
         // ..do something to the data...
         for (int sample = 0; sample < buffer.getNumSamples(); sample++)
@@ -167,7 +171,7 @@ void BasicDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 
             *channelData *= chainSettings.drive * chainSettings.range;
 
-            *channelData = (((((2.f / float_Pi) * atan(*channelData)) * chainSettings.blend) + (cleanSignal * (1.f - chainSettings.blend))) / 2) * chainSettings.gain;
+            *channelData = (((((2.f / float_Pi) * atan(*channelData)) * chainSettings.blend) + (cleanSignal * (1.f - chainSettings.blend))) / 2) * gain;
 
             channelData++;
         }
@@ -198,21 +202,26 @@ void BasicDistortionAudioProcessor::getStateInformation (juce::MemoryBlock& dest
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
+    MemoryOutputStream mos(destData, true);
+    apvts.state.writeToStream(mos);
 }
 
-/*
 void BasicDistortionAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+    auto tree = juce::ValueTree::readFromData(data, sizeInBytes);
+    if (tree.isValid())
+    {
+        apvts.replaceState(tree);
+    }
 }
-*/
 
 ChainSettings getChainSettings(AudioProcessorValueTreeState& apvts)
 {
     ChainSettings settings;
 
-    settings.drive = apvts.getRawParameterValue("Drive")->load();
+    settings.drive = apvts.getRawParameterValue("Drive")->load(); 
     settings.range = apvts.getRawParameterValue("Range")->load();
     settings.blend = apvts.getRawParameterValue("Blend")->load();
     settings.gain = apvts.getRawParameterValue("Gain")->load();
@@ -225,10 +234,47 @@ BasicDistortionAudioProcessor::createParameterLayout()
 {
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
 
-    layout.add(std::make_unique<juce::AudioParameterFloat>("Drive", "Drive", juce::NormalisableRange<float>(0.f, 1.f, 0.001f, 1.f), 1.f));
-    layout.add(std::make_unique<juce::AudioParameterFloat>("Range", "Range", juce::NormalisableRange<float>(0.f, 3000.f, 0.001f, 1.f), 1.f));
-    layout.add(std::make_unique<juce::AudioParameterFloat>("Blend", "Blend", juce::NormalisableRange<float>(0.f, 1.f, 0.001f, 1.f), 1.f));
-    layout.add(std::make_unique<juce::AudioParameterFloat>("Gain", "Gain", juce::NormalisableRange<float>(0.f, 3.f, 0.001f, 1.f), 1.f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>( "Drive", 
+                                                            "Drive", 
+                                                            juce::NormalisableRange<float>(0.f, 1.f, 0.001f, 1.f), 
+                                                            1.f,
+                                                            juce::String(),
+                                                            juce::AudioProcessorParameter::genericParameter,
+                                                            [](float value, int maxStringLength) { return juce::String(value * 100, 0) << "%"; },
+                                                            [](juce::String text) { return text.getFloatValue() / 100; }));
+
+    layout.add(std::make_unique<juce::AudioParameterFloat>( "Range", 
+                                                            "Range", 
+                                                            juce::NormalisableRange<float>(0.f, 3000.f, 0.001f, 1.f), 
+                                                            1000.f,
+                                                            juce::String(),
+                                                            juce::AudioProcessorParameter::genericParameter,
+                                                            [](float value, int) { return (value < 1000) ?
+                                                            juce::String(value, 1) + " Hz" :
+                                                            juce::String(value / 1000.0, 1) + " kHz"; },
+                                                            [](juce::String text) { return text.endsWith(" kHz") ?
+                                                            text.getFloatValue() * 1000.0f :
+                                                            text.getFloatValue(); }));
+
+    //layout.add(std::make_unique<juce::AudioParameterFloat>("Blend", "Blend", juce::NormalisableRange<float>(0.f, 1.f, 0.001f, 1.f), 1.f));
+
+    layout.add(std::make_unique<juce::AudioParameterFloat>( "Blend", 
+                                                            "Blend", 
+                                                            juce::NormalisableRange<float>(0.f, 1.f, 0.001f, 1.f), 
+                                                            1.f,
+                                                            juce::String(),
+                                                            juce::AudioProcessorParameter::genericParameter,
+                                                            [](float value, int maxStringLength) { return juce::String(value * 100, 0) << "%"; },
+                                                            [](juce::String text) { return text.getFloatValue() / 100; }));
+
+    layout.add(std::make_unique<juce::AudioParameterFloat>( "Gain", 
+                                                            "Gain", 
+                                                            juce::NormalisableRange<float>(-12.f, 12.f, 0.5f, 1.f),
+                                                            0.f,
+                                                            juce::String(),
+                                                            juce::AudioProcessorParameter::genericParameter,
+                                                            [](float value, int maxStringLength) { return juce::String(value,1) << " dB"; },
+                                                            [](juce::String text) { return text.getFloatValue(); }));
 
     return layout;
 }
